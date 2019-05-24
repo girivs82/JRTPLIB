@@ -48,7 +48,7 @@
 	#include <jthread/jthread.h>
 #endif // RTP_SUPPORT_THREAD
 
-struct srtp_ctx_t;
+struct srtp_ctx_t_;
 
 namespace jrtplib
 {
@@ -91,7 +91,7 @@ protected:
 	 *  use it to specify encryption parameters for various sources; note that you
 	 *  **must** release the context again after use with the 
 	 *  RTPSecureSession::UnlockSRTPContext function. */
-	srtp_ctx_t *LockSRTPContext();
+	srtp_ctx_t_ *LockSRTPContext();
 
 	/** Releases the lock on the SRTP context that was obtained in 
 	 *  RTPSecureSession::LockSRTPContext. */
@@ -115,7 +115,7 @@ private:
 	int encryptData(uint8_t *pData, int &dataLength, bool rtp);
 	int decryptRawPacket(RTPRawPacket *rawpack, int *srtpError);
 
-	srtp_ctx_t *m_pSRTPContext;
+	srtp_ctx_t_ *m_pSRTPContext;
 	int m_lastSRTPError;
 #ifdef RTP_SUPPORT_THREAD
 	jthread::JMutex m_srtpLock;

@@ -27,7 +27,7 @@ using namespace std;
 #include "rtprawpacket.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <srtp/srtp.h>
+#include <srtp2/srtp.h>
 #include <string>
 
 using namespace jrtplib;
@@ -78,11 +78,11 @@ public:
 		memset(&policyIn, 0, sizeof(srtp_policy_t));
 		memset(&policyOut, 0, sizeof(srtp_policy_t));
 		
-		crypto_policy_set_rtp_default(&policyIn.rtp);
-		crypto_policy_set_rtcp_default(&policyIn.rtcp);
+		srtp_crypto_policy_set_rtp_default(&policyIn.rtp);
+		srtp_crypto_policy_set_rtcp_default(&policyIn.rtcp);
 
-		crypto_policy_set_rtp_default(&policyOut.rtp);
-		crypto_policy_set_rtcp_default(&policyOut.rtcp);
+		srtp_crypto_policy_set_rtp_default(&policyOut.rtp);
+		srtp_crypto_policy_set_rtcp_default(&policyOut.rtcp);
 
 		policyIn.ssrc.type = ssrc_any_inbound;
 		policyIn.key = (uint8_t *)key.c_str();
@@ -99,12 +99,12 @@ public:
 			cerr << "Unable to get/lock srtp context" << endl;
 			return false;
 		}
-		err_status_t err = srtp_add_stream(ctx, &policyIn);
-		if (err == err_status_ok)
+		srtp_err_status_t err = srtp_add_stream(ctx, &policyIn);
+		if (err == srtp_err_status_ok)
 			err = srtp_add_stream(ctx, &policyOut);
 		UnlockSRTPContext();
 
-		if (err != err_status_ok)
+		if (err != srtp_err_status_ok)
 		{
 			cerr << "libsrtp error while adding stream: " << err << endl;
 			return false;
@@ -134,7 +134,7 @@ protected:
 	void OnErrorChangeIncomingData(int errcode, int libsrtperrorcode) 
 	{
 		printf("SSRC %x JRTPLIB Error: %s\n", GetLocalSSRC(), RTPGetErrorString(errcode).c_str());
-		if (libsrtperrorcode != err_status_ok)
+		if (libsrtperrorcode != srtp_err_status_ok)
 			printf("libsrtp error: %d\n", libsrtperrorcode);
 		printf("\n");
 	}

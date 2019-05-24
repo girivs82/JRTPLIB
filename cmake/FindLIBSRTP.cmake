@@ -2,17 +2,17 @@ INCLUDE(FindPkgConfig OPTIONAL)
 
 IF(PKG_CONFIG_FOUND)
 	INCLUDE(FindPkgConfig)
-	PKG_CHECK_MODULES(LIBSRTP srtp)
+	PKG_CHECK_MODULES(LIBSRTP srtp2)
 ENDIF(PKG_CONFIG_FOUND)
 
 IF(NOT LIBSRTP_FOUND)
-	FIND_PATH(LIBSRTP_INCLUDE_DIR srtp/srtp.h
+	FIND_PATH(LIBSRTP_INCLUDE_DIR srtp2/srtp.h
 		/usr/local/include
 		/usr/include
 	)
 
 	FIND_LIBRARY(LIBSRTP_LIBRARY_DIR
-		NAMES srtp
+		NAMES srtp2
 		PATH
 		/usr/local/lib
 		/usr/local/lib64

@@ -38,7 +38,7 @@
 #ifdef RTP_SUPPORT_THREAD
 #include <jthread/jmutexautolock.h>
 #endif
-#include <srtp/srtp.h>
+#include <srtp2/srtp.h>
 #include <iostream>
 #include <vector>
 
@@ -82,8 +82,8 @@ int RTPSecureSession::InitializeSRTPContext()
 	if (m_pSRTPContext)
 		return ERR_RTP_SECURESESSION_CONTEXTALREADYINITIALIZED;
 
-	err_status_t result = srtp_create(&m_pSRTPContext, NULL);
-	if (result != err_status_ok)
+	srtp_err_status_t result = srtp_create(&m_pSRTPContext, NULL);
+	if (result != srtp_err_status_ok)
 	{
 		m_pSRTPContext = 0;
 		m_lastSRTPError = (int)result;
@@ -151,8 +151,8 @@ int RTPSecureSession::encryptData(uint8_t *pData, int &dataLength, bool rtp)
 		if (length < (int)sizeof(uint32_t)*3)
 			return ERR_RTP_SECURESESSION_NOTENOUGHDATATOENCRYPT ;
 
-		err_status_t result = srtp_protect(m_pSRTPContext, (void *)pData, &length);
-		if (result != err_status_ok)
+		srtp_err_status_t result = srtp_protect(m_pSRTPContext, (void *)pData, &length);
+		if (result != srtp_err_status_ok)
 		{
 			m_lastSRTPError = (int)result;
 			return ERR_RTP_SECURESESSION_CANTENCRYPTRTPDATA;
@@ -163,8 +163,8 @@ int RTPSecureSession::encryptData(uint8_t *pData, int &dataLength, bool rtp)
 		if (length < (int)sizeof(uint32_t)*2)
 			return ERR_RTP_SECURESESSION_NOTENOUGHDATATOENCRYPT;
 
-		err_status_t result = srtp_protect_rtcp(m_pSRTPContext, (void *)pData, &length);
-		if (result != err_status_ok)
+		srtp_err_status_t result = srtp_protect_rtcp(m_pSRTPContext, (void *)pData, &length);
+		if (result != srtp_err_status_ok)
 		{
 			m_lastSRTPError = (int)result;
 			return ERR_RTP_SECURESESSION_CANTENCRYPTRTCPDATA;
@@ -221,8 +221,8 @@ int RTPSecureSession::decryptRawPacket(RTPRawPacket *rawpack, int *srtpError)
 		if (dataLength < (int)sizeof(uint32_t)*3)
 			return ERR_RTP_SECURESESSION_NOTENOUGHDATATODECRYPT;
 
-		err_status_t result = srtp_unprotect(m_pSRTPContext, (void*)pData, &dataLength);
-		if (result != err_status_ok)
+		srtp_err_status_t result = srtp_unprotect(m_pSRTPContext, (void*)pData, &dataLength);
+		if (result != srtp_err_status_ok)
 		{
 			*srtpError = result;
 			return ERR_RTP_SECURESESSION_CANTDECRYPTRTPDATA;
@@ -233,8 +233,8 @@ int RTPSecureSession::decryptRawPacket(RTPRawPacket *rawpack, int *srtpError)
 		if (dataLength < (int)sizeof(uint32_t)*2)
 			return ERR_RTP_SECURESESSION_NOTENOUGHDATATODECRYPT;
 
-		err_status_t result = srtp_unprotect_rtcp(m_pSRTPContext, (void *)pData, &dataLength);
-		if (result != err_status_ok)
+		srtp_err_status_t result = srtp_unprotect_rtcp(m_pSRTPContext, (void *)pData, &dataLength);
+		if (result != srtp_err_status_ok)
 		{
 			*srtpError = result;
 			return ERR_RTP_SECURESESSION_CANTDECRYPTRTCPDATA;
